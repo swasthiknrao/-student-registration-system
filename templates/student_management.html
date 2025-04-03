@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Management - Dr. B. B. Hegde First Grade College</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #4a4a4a;
+            --secondary-color: #808080;
+            --accent-color: #ff6b6b;
+            --success-color: #20c997;
+            --light-bg: #f5f5f5;
+            --dark-bg: #333333;
+            --text-primary: #333333;
+            --text-secondary: #666666;
+            --border-radius: 10px;
+            --gradient-start: #4a4a4a;
+            --gradient-mid: #666666;
+            --gradient-end: #808080;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f5f5f5 0%, #e0e0e0 100%);
+            min-height: 100vh;
+        }
+
+        .college-header {
+            background: linear-gradient(135deg, var(--gradient-start), var(--gradient-mid), var(--gradient-end));
+            padding: 2rem 0;
+            margin-bottom: 2rem;
+            color: white;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+        }
+
+        .student-card {
+            background: white;
+            border: none;
+            border-radius: var(--border-radius);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .student-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--gradient-start), var(--gradient-end));
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .student-card:hover::before {
+            opacity: 1;
+        }
+
+        .student-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+        }
+
+        .search-section {
+            background: white;
+            padding: 2rem;
+            border-radius: var(--border-radius);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+            margin-bottom: 2rem;
+            border: 1px solid rgba(134, 198, 227, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .search-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--gradient-start), var(--gradient-end));
+        }
+
+        .input-group {
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            border-radius: var(--border-radius);
+            overflow: hidden;
+        }
+
+        .input-group .form-control {
+            border: none;
+            padding: 1rem;
+            background: var(--light-bg);
+        }
+
+        .input-group .btn {
+            padding: 0 1.5rem;
+            background: linear-gradient(135deg, var(--gradient-start), var(--gradient-mid));
+            border: none;
+            color: white;
+        }
+
+        .class-section {
+            background: white;
+            padding: 1.5rem;
+            border-radius: var(--border-radius);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+            margin-bottom: 2rem;
+            border: 1px solid rgba(134, 198, 227, 0.2);
+        }
+
+        .class-header {
+            background: linear-gradient(135deg, var(--gradient-start), var(--gradient-mid));
+            padding: 1rem 1.5rem;
+            border-radius: var(--border-radius);
+            margin-bottom: 1.5rem;
+            color: white;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .class-header h3 {
+            margin: 0;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .detail-section {
+            background: var(--light-bg);
+            padding: 1.5rem;
+            border-radius: var(--border-radius);
+            margin-bottom: 1.5rem;
+            border: 1px solid rgba(134, 198, 227, 0.1);
+        }
+
+        .detail-section h4 {
+            color: var(--text-primary);
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--secondary-color);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .detail-row {
+            background: white;
+            padding: 1rem;
+            border-radius: var(--border-radius);
+            margin-bottom: 1rem;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+        }
+
+        .detail-row:hover {
+            transform: translateX(5px);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .detail-label {
+            color: var(--text-primary);
+            font-weight: 600;
+            min-width: 150px;
+            display: inline-block;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: var(--border-radius);
+            transition: all 0.3s ease;
+            border: none;
+            font-weight: 500;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--gradient-start), var(--gradient-mid));
+            color: white;
+        }
+
+        .btn-warning {
+            background: linear-gradient(135deg, #ff6b6b, #ff8e8e);
+            color: white;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+
+        .modal-content {
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            border: none;
+        }
+
+        .modal-header {
+            background: linear-gradient(135deg, var(--gradient-start), var(--gradient-mid), var(--gradient-end));
+            color: white;
+            padding: 1.5rem;
+            border: none;
+        }
+
+        .modal-body {
+            padding: 2rem;
+        }
+
+        @media (max-width: 768px) {
+            .college-title h1 {
+                font-size: 1.8rem;
+            }
+
+            .college-logo {
+                height: 70px;
+            }
+
+            .class-header h3 {
+                font-size: 1.2rem;
+            }
+
+            .detail-label {
+                min-width: 120px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="college-header">
+        <div class="container">
+            <div class="d-flex align-items-center justify-content-center">
+                <img src="static\clglogo.png" alt="College Logo" class="college-logo">
+                <div class="college-title">
+                    <h1>Dr. B. B. Hegde First Grade College</h1>
+                    <p>Kundapura</p>
+                    <p class="motto">Excellence in Education</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container mt-4">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <a href="/" class="btn btn-primary">
+                <i class="fas fa-user-plus"></i> New Student Registration
+            </a>
+            <h2 class="mb-0">
+                <i class="fas fa-users"></i> Student Management
+            </h2>
+        </div>
+
+        <div class="search-section">
+            <div class="row justify-content-center">
+                <div class="col-md-6">
+                    <div class="input-group">
+                        <input type="text" class="form-control" id="searchInput" 
+                               placeholder="Search by Roll Number or Student Name">
+                        <button class="btn btn-primary" id="searchButton">
+                            <i class="fas fa-search"></i> Search
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="searchResults" class="row student-list" style="display: none;">
+            <!-- Search results will be populated here -->
+        </div>
+
+        <div id="studentList">
+            <!-- Students grouped by class will be displayed here -->
+            {% for class, students in students_by_class.items() %}
+            <div class="class-section">
+                <div class="class-header">
+                    <h3><i class="fas fa-graduation-cap"></i> {{ class }}</h3>
+                </div>
+                <div class="row">
+                    {% for student in students %}
+                    <div class="col-md-4 mb-4">
+                        <div class="card student-card" data-student-id="{{ student.id }}">
+                            <div class="card-body">
+                                <h5 class="card-title">{{ student.studentName }}</h5>
+                                <p class="card-text">
+                                    <i class="fas fa-id-badge"></i> Roll No: {{ student.rollNo }}<br>
+                                    <i class="fas fa-registered"></i> Reg No: {{ student.regNo }}
+                                </p>
+                                <button class="btn btn-sm btn-primary view-details" data-student-id="{{ student.id }}">
+                                    <i class="fas fa-eye"></i> View Details
+                                </button>
+                                <a href="/edit_student/{{ student.id }}" class="btn btn-sm btn-warning">
+                                    <i class="fas fa-edit"></i> Edit
+                                </a>
+                                <button class="btn btn-sm btn-danger delete-student" data-student-id="{{ student.id }}">
+                                    <i class="fas fa-trash"></i> Delete
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Student Details Modal -->
+    <div class="modal fade student-details-modal" id="studentDetailsModal" tabindex="-1">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"><i class="fas fa-user-circle"></i> Student Details</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <!-- Student details will be populated here -->
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <a href="#" class="btn btn-warning" id="editStudentBtn">
+                        <i class="fas fa-edit"></i> Edit Student
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Delete Confirmation Modal -->
+    <div class="modal fade" id="deleteConfirmModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header" style="background: linear-gradient(135deg, #ff6b6b, #ff8e8e);">
+                    <h5 class="modal-title text-white">
+                        <i class="fas fa-exclamation-triangle"></i> Confirm Delete
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Are you sure you want to delete this student? This action cannot be undone.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-danger" id="confirmDelete">
+                        <i class="fas fa-trash"></i> Delete Student
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        const studentDetailsModal = new bootstrap.Modal(document.getElementById('studentDetailsModal'));
+        const searchInput = document.getElementById('searchInput');
+        const searchButton = document.getElementById('searchButton');
+        const searchResults = document.getElementById('searchResults');
+        const studentList = document.getElementById('studentList');
+
+        // Search functionality
+        let searchTimeout;
+
+        async function searchStudents(query) {
+            try {
+                const response = await fetch('/search_students', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ query })
+                });
+                const data = await response.json();
+                
+                if (data.students.length === 0) {
+                    searchResults.innerHTML = '<div class="col-12 text-center"><p>No students found</p></div>';
+                } else {
+                    searchResults.innerHTML = data.students.map(student => `
+                        <div class="col-md-4 mb-4">
+                            <div class="card student-card" data-student-id="${student.id}">
+                                <div class="card-body">
+                                    <h5 class="card-title">${student.studentName}</h5>
+                                    <p class="card-text">
+                                        <i class="fas fa-id-badge"></i> Roll No: ${student.rollNo}<br>
+                                        <i class="fas fa-registered"></i> Reg No: ${student.regNo}
+                                    </p>
+                                    <button class="btn btn-sm btn-primary view-details" data-student-id="${student.id}">
+                                        <i class="fas fa-eye"></i> View Details
+                                    </button>
+                                    <a href="/edit_student/${student.id}" class="btn btn-sm btn-warning">
+                                        <i class="fas fa-edit"></i> Edit
+                                    </a>
+                                    <button class="btn btn-sm btn-danger delete-student" data-student-id="${student.id}">
+                                        <i class="fas fa-trash"></i> Delete
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    `).join('');
+                }
+                
+                searchResults.style.display = 'block';
+                studentList.style.display = 'none';
+            } catch (error) {
+                console.error('Error searching students:', error);
+            }
+        }
+
+        // View student details
+        async function viewStudentDetails(studentId) {
+            try {
+                const response = await fetch(`/get_student_details/${studentId}`);
+                const student = await response.json();
+                
+                const modalBody = document.querySelector('.student-details-modal .modal-body');
+                modalBody.innerHTML = `
+                    <div class="detail-section">
+                        <h4><i class="fas fa-id-card"></i> Basic Information</h4>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="detail-row">
+                                    <span class="detail-label">Sl. No:</span> ${student.slNo || '-'}
+                                </div>
+                                <div class="detail-row">
+                                    <span class="detail-label">Reg. No:</span> ${student.regNo || '-'}
+                                </div>
+                                <div class="detail-row">
+                                    <span class="detail-label">Roll No:</span> ${student.rollNo || '-'}
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="detail-row">
+                                    <span class="detail-label">Class/Section:</span> ${student.classSection || '-'}
+                                </div>
+                                <div class="detail-row">
+                                    <span class="detail-label">Year of Admission:</span> ${student.yearOfAdmission || '-'}
+                                </div>
+                                <div class="detail-row">
+                                    <span class="detail-label">ABC ID:</span> ${student.abcId || '-'}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="detail-section">
+                        <h4><i class="fas fa-user"></i> Personal Information</h4>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="detail-row">
+                                    <span class="detail-label">Student Name:</span> ${student.studentName || '-'}
+                                </div>
+                                <div class="detail-row">
+                                    <span class="detail-label">Father Name:</span> ${student.fatherName || '-'}
+                                </div>
+                                <div class="detail-row">
+                                    <span class="detail-label">Gender:</span> ${student.gender || '-'}
+                                </div>
+                                <div class="detail-row">
+                                    <span class="detail-label">DOB:</span> ${student.dob || '-'}
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="detail-row">
+                                    <span class="detail-label">Blood Group:</span> ${student.bloodGroup || '-'}
+                                </div>
+                                <div class="detail-row">
+                                    <span class="detail-label">Religion:</span> ${student.religion || '-'}
+                                </div>
+                                <div class="detail-row">
+                                    <span class="detail-label">Category:</span> ${student.category || '-'}
+                                </div>
+                                <div class="detail-row">
+                                    <span class="detail-label">Caste:</span> ${student.caste || '-'}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="detail-section">
+                        <h4><i class="fas fa-address-card"></i> Contact Information</h4>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="detail-row">
+                                    <span class="detail-label">Email:</span> ${student.email || '-'}
+                                </div>
+                                <div class="detail-row">
+                                    <span class="detail-label">Student Contact:</span> ${student.studentContact || '-'}
+                                </div>
+                                <div class="detail-row">
+                                    <span class="detail-label">Parent Contact:</span> ${student.parentNo || '-'}
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="detail-row">
+                                    <span class="detail-label">Address:</span> ${student.address || '-'}
+                                </div>
+                                <div class="detail-row">
+                                    <span class="detail-label">State:</span> ${student.state || '-'}
+                                </div>
+                                <div class="detail-row">
+                                    <span class="detail-label">District:</span> ${student.district || '-'}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="detail-section">
+                        <h4><i class="fas fa-graduation-cap"></i> Academic Information</h4>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="detail-row">
+                                    <span class="detail-label">PUC Roll No:</span> ${student.pucRollNo || '-'}
+                                </div>
+                                <div class="detail-row">
+                                    <span class="detail-label">PUC Year:</span> ${student.pucYear || '-'}
+                                </div>
+                                <div class="detail-row">
+                                    <span class="detail-label">PUC Institute:</span> ${student.pucInstitute || '-'}
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="detail-row">
+                                    <span class="detail-label">PUC Total Marks:</span> ${student.pucTotalMarks || '-'}
+                                </div>
+                                <div class="detail-row">
+                                    <span class="detail-label">PUC Obtained:</span> ${student.pucObtainedMarks || '-'}
+                                </div>
+                                <div class="detail-row">
+                                    <span class="detail-label">PUC Percentage:</span> ${student.pucPercentage || '-'}%
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="detail-section">
+                        <h4><i class="fas fa-book"></i> Additional Information</h4>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="detail-row">
+                                    <span class="detail-label">Discipline 1:</span> ${student.discipline1 || '-'}
+                                </div>
+                                <div class="detail-row">
+                                    <span class="detail-label">Lang 2:</span> ${student.lang2 || '-'}
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="detail-row">
+                                    <span class="detail-label">Income:</span> ${student.income || '-'}
+                                </div>
+                                <div class="detail-row">
+                                    <span class="detail-label">Aadhar No:</span> ${student.aadharNo || '-'}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+                document.getElementById('editStudentBtn').href = `/edit_student/${studentId}`;
+                studentDetailsModal.show();
+            } catch (error) {
+                console.error('Error fetching student details:', error);
+            }
+        }
+
+        // Delete functionality
+        const deleteConfirmModal = new bootstrap.Modal(document.getElementById('deleteConfirmModal'));
+        let studentToDelete = null;
+
+        async function deleteStudent(studentId) {
+            try {
+                const response = await fetch(`/delete_student/${studentId}`, {
+                    method: 'DELETE'
+                });
+                const result = await response.json();
+                
+                if (result.success) {
+                    // Remove the student card from the UI
+                    const studentCard = document.querySelector(`.student-card[data-student-id="${studentId}"]`);
+                    if (studentCard) {
+                        studentCard.closest('.col-md-4').remove();
+                    }
+                    
+                    // Show success notification
+                    const notification = document.createElement('div');
+                    notification.className = 'notification success';
+                    notification.innerHTML = '<i class="fas fa-check-circle"></i> Student deleted successfully';
+                    document.body.appendChild(notification);
+                    
+                    setTimeout(() => {
+                        notification.remove();
+                    }, 3000);
+                } else {
+                    throw new Error(result.error || 'Failed to delete student');
+                }
+            } catch (error) {
+                console.error('Error deleting student:', error);
+                // Show error notification
+                const notification = document.createElement('div');
+                notification.className = 'notification error';
+                notification.style.background = 'linear-gradient(135deg, #ff6b6b, #ff8e8e)';
+                notification.innerHTML = `<i class="fas fa-exclamation-circle"></i> ${error.message}`;
+                document.body.appendChild(notification);
+                
+                setTimeout(() => {
+                    notification.remove();
+                }, 3000);
+            }
+        }
+
+        // Event Listeners
+        searchInput.addEventListener('input', () => {
+            const query = searchInput.value.trim();
+            
+            // Clear the previous timeout
+            clearTimeout(searchTimeout);
+            
+            // Set a new timeout to trigger search after 100ms (0.1 seconds)
+            searchTimeout = setTimeout(() => {
+                if (query) {
+                    searchStudents(query);
+                } else {
+                    // If search is empty, show all students
+                    searchResults.style.display = 'none';
+                    studentList.style.display = 'block';
+                }
+            }, 100);
+        });
+
+        searchInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                const query = searchInput.value.trim();
+                if (query) {
+                    searchStudents(query);
+                }
+            }
+        });
+
+        document.addEventListener('click', (e) => {
+            if (e.target.closest('.view-details')) {
+                const studentId = e.target.closest('.view-details').dataset.studentId;
+                viewStudentDetails(studentId);
+            }
+            if (e.target.closest('.delete-student')) {
+                e.preventDefault();
+                studentToDelete = e.target.closest('.delete-student').dataset.studentId;
+                deleteConfirmModal.show();
+            }
+        });
+
+        document.getElementById('confirmDelete').addEventListener('click', () => {
+            if (studentToDelete) {
+                deleteStudent(studentToDelete);
+                deleteConfirmModal.hide();
+                studentToDelete = null;
+            }
+        });
+    </script>
+</body>
+</html> 

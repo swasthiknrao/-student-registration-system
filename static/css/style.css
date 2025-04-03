@@ -1,0 +1,404 @@
+/* Modern Balanced Theme Colors */
+:root {
+    --primary-color: #78909c;
+    --secondary-color: #90a4ae;
+    --accent-color: #b0bec5;
+    --text-light: #ffffff;
+    --text-dark: #546e7a;
+    --bg-light: #f5f7f9;
+    --bg-dark: #78909c;
+}
+
+body {
+    background: #f5f7f9;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #546e7a;
+}
+
+/* College Header Styling */
+.college-header {
+    background: #78909c;
+    color: #ffffff;
+    padding: 50px 0;
+    margin-bottom: 50px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(120, 144, 156, 0.2);
+}
+
+.college-logo {
+    width: 160px;
+    height: 160px;
+    object-fit: contain;
+    margin-right: 40px;
+    border: 4px solid #b0bec5;
+    border-radius: 20px;
+    padding: 20px;
+    background: #ffffff;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+}
+
+.college-logo img {
+    transform: rotate(-45deg);
+}
+
+.college-title h1 {
+    font-size: 3.2rem;
+    font-weight: 700;
+    margin-bottom: 20px;
+    color: #ffffff;
+    letter-spacing: -0.5px;
+    line-height: 1.2;
+}
+
+.college-title p {
+    font-size: 1.6rem;
+    margin: 0;
+    color: #eceff1;
+    font-weight: 500;
+}
+
+.college-title .motto {
+    font-style: italic;
+    font-size: 1.4rem;
+    color: #cfd8dc;
+    margin-top: 20px;
+    font-weight: 400;
+}
+
+/* Barcode Scanner Section */
+.scanner-section {
+    background: #ffffff;
+    border-radius: 16px;
+    padding: 40px;
+    margin-bottom: 50px;
+    position: relative;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+    border: 1px solid #ecf0f1;
+}
+
+.scanner-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 6px;
+    background: #95a5a6;
+    border-radius: 16px 16px 0 0;
+}
+
+.scanner-input {
+    position: relative;
+    margin-bottom: 20px;
+}
+
+.scan-line {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: var(--accent-color);
+    opacity: 0;
+    animation: scanAnimation 2s ease-in-out infinite;
+}
+
+@keyframes scanAnimation {
+    0% { top: 0; opacity: 0; }
+    50% { opacity: 1; }
+    100% { top: 100%; opacity: 0; }
+}
+
+.barcode-input {
+    height: 70px;
+    font-size: 1.3rem;
+    border: 3px solid #ecf0f1;
+    border-radius: 12px;
+    padding: 20px 25px;
+    background: #ffffff;
+    color: #2c3e50;
+    transition: all 0.3s ease;
+}
+
+.barcode-input:focus {
+    border-color: #95a5a6;
+    box-shadow: 0 0 0 4px rgba(149, 165, 166, 0.1);
+    background: #ffffff;
+}
+
+.scan-button {
+    background: #2c3e50;
+    border: none;
+    height: 70px;
+    padding: 0 40px;
+    border-radius: 12px;
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: #ffffff;
+    letter-spacing: 1px;
+    transition: all 0.3s ease;
+}
+
+.scan-button:hover {
+    background: #34495e;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(44, 62, 80, 0.2);
+}
+
+.scan-button i {
+    margin-right: 10px;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.2); }
+    100% { transform: scale(1); }
+}
+
+/* Form Container */
+.form-container {
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 40px;
+    position: relative;
+    box-shadow: 0 4px 20px rgba(120, 144, 156, 0.1);
+    border: 1px solid #eceff1;
+}
+
+.section-header {
+    background: #f5f7f9;
+    padding: 20px 30px;
+    margin: 30px -20px;
+    border-left: 4px solid #b0bec5;
+    font-size: 1.4rem;
+    color: #546e7a;
+    font-weight: 600;
+}
+
+.section-header i {
+    margin-right: 15px;
+    color: #90a4ae;
+    font-size: 1.4rem;
+}
+
+.form-floating {
+    margin-bottom: 20px;
+}
+
+.form-control, .form-select {
+    height: 55px;
+    border-radius: 8px;
+    border: 2px solid #eceff1;
+    padding: 12px 18px;
+    font-size: 1.1rem;
+    background: #ffffff;
+    color: #546e7a;
+}
+
+.form-control:focus, .form-select:focus {
+    border-color: #90a4ae;
+    box-shadow: 0 0 0 3px rgba(144, 164, 174, 0.1);
+    background: #ffffff;
+}
+
+.form-label {
+    font-weight: 500;
+    color: #546e7a;
+    margin-bottom: 8px;
+    font-size: 1.1rem;
+}
+
+textarea.form-control {
+    height: auto;
+    min-height: 120px;
+    border-radius: 12px;
+    background: #ffffff;
+    color: #2c3e50;
+}
+
+/* Submit Button */
+.btn-submit {
+    background: #78909c;
+    border: none;
+    padding: 15px 40px;
+    border-radius: 8px;
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #ffffff;
+    position: relative;
+}
+
+.btn-submit:hover {
+    background: #90a4ae;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(120, 144, 156, 0.2);
+}
+
+/* Success Animation */
+.success-checkmark {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto;
+    animation: checkmark 0.8s ease-in-out forwards;
+}
+
+@keyframes checkmark {
+    0% { transform: scale(0); }
+    50% { transform: scale(1.2); }
+    100% { transform: scale(1); }
+}
+
+/* Notifications */
+.notification {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 20px 30px;
+    border-radius: 8px;
+    color: #ffffff;
+    font-weight: 500;
+    z-index: 1000;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    max-width: 400px;
+    font-size: 1.1rem;
+}
+
+.notification.success {
+    background: #81c784;
+}
+
+.notification.error {
+    background: #e57373;
+}
+
+.notification.info {
+    background: #78909c;
+}
+
+.notification.warning {
+    background: #ffb74d;
+}
+
+.error-box {
+    background: #ffebee;
+    border: 2px solid #e57373;
+    color: #d32f2f;
+    padding: 15px;
+    border-radius: 8px;
+    margin: 12px 0;
+    font-weight: 500;
+    display: none;
+    font-size: 1.1rem;
+}
+
+/* Modal Styling */
+.modal-content {
+    border-radius: 12px;
+    border: none;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    background: #ffffff;
+}
+
+.modal-header {
+    border-radius: 12px 12px 0 0;
+    padding: 20px;
+    background: #78909c;
+    color: #ffffff;
+    border-bottom: 2px solid #90a4ae;
+}
+
+.modal-body {
+    padding: 30px;
+    font-size: 1.2rem;
+    line-height: 1.6;
+    color: #546e7a;
+}
+
+.modal-footer {
+    padding: 20px;
+    border-top: 2px solid #eceff1;
+}
+
+.btn-close {
+    background: none;
+    opacity: 0.8;
+    padding: 20px;
+    color: #2c3e50;
+    transition: all 0.3s ease;
+}
+
+.btn-close:hover {
+    opacity: 1;
+    transform: rotate(90deg);
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f5f7f9;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #b0bec5;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #90a4ae;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .college-header {
+        padding: 40px 0;
+    }
+    
+    .college-logo {
+        width: 140px;
+        height: 140px;
+        margin-right: 30px;
+    }
+    
+    .college-title h1 {
+        font-size: 2.4rem;
+    }
+    
+    .college-title p {
+        font-size: 1.3rem;
+    }
+    
+    .form-container {
+        padding: 30px;
+    }
+    
+    .section-header {
+        font-size: 1.2rem;
+        padding: 15px 25px;
+    }
+    
+    .form-control, .form-select {
+        height: 55px;
+        font-size: 1.1rem;
+    }
+}
+
+/* Additional Decorative Elements */
+.decorative-bg {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, rgba(44, 62, 80, 0.05) 0%, rgba(52, 73, 94, 0.05) 100%);
+    z-index: -1;
+}
+
+* {
+    animation: none !important;
+    transition: none !important;
+} 
