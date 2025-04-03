@@ -1,6 +1,6 @@
 # Student Registration System
 
-A web application for managing student registrations using Flask and Firebase.
+A web application for managing student registrations using Flask and Firebase, featuring ID card barcode scanning capabilities, search functionality, and student record management.
 
 ## Contact Information
 - Email: nraoswasthik2004@gmail.com
@@ -41,6 +41,18 @@ http://localhost:5000
 ## Features
 
 - Student registration form with all necessary fields
+- ID card barcode scanning functionality
+  - Supports scanning student ID cards
+  - Automatically extracts student information from barcode
+  - Quick and efficient registration process
+- Advanced Search Functionality
+  - Search students by name, ID, or department
+  - Filter and sort search results
+  - Quick access to student records
+- Student Record Management
+  - Add new student records
+  - Update existing student information
+  - View detailed student profiles
 - Data storage in Firebase Firestore
 - Responsive design using Bootstrap
 - Form validation
@@ -54,7 +66,9 @@ http://localhost:5000
 ├── app.py                 # Main Flask application
 ├── requirements.txt       # Python dependencies
 ├── templates/            # HTML templates
-│   └── student_form.html  # Student registration form
+│   ├── student_form.html  # Student registration form
+│   ├── search.html       # Search interface
+│   └── student_profile.html # Student profile view
 ├── static/              # Static files (CSS, JS, images)
 ├── .env                 # Environment variables
 ├── firestore.rules      # Firebase security rules
