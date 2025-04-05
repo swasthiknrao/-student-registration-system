@@ -105,7 +105,6 @@ def submit():
     try:
         # Get form data and create student dictionary
         student_data = {
-            'slNo': request.form.get('slNo'),
             'regNo': request.form.get('regNo'),
             'rollNo': request.form.get('rollNo'),
             'classSection': request.form.get('classSection'),
@@ -212,42 +211,140 @@ def manage_students():
 def search_students():
     try:
         data = request.json
-        query = data.get('query', '').strip()
+        query = data.get('query', '').strip().lower()  # Convert query to lowercase
+        filter_type = data.get('filter', 'all')  # Get filter type
         
         if not query:
             return jsonify({'students': []}), 200
 
         # Search in Firestore
         students_ref = db.collection('students')
-        # Search by roll number or student name
-        roll_query = students_ref.where('rollNo', '>=', query).where('rollNo', '<=', query + '\uf8ff').limit(10).get()
-        name_query = students_ref.where('studentName', '>=', query).where('studentName', '<=', query + '\uf8ff').limit(10).get()
         
-        # Combine results
+        # Get all students (since Firestore doesn't support case-insensitive search directly)
+        all_students = students_ref.get()
+        
+        # Filter students based on case-insensitive search
         students = []
         seen_ids = set()
         
-        for doc in roll_query:
+        for doc in all_students:
             student_data = doc.to_dict()
-            if doc.id not in seen_ids:
+            student_name = student_data.get('studentName', '').lower()
+            roll_no = student_data.get('rollNo', '').lower()
+            class_section = student_data.get('classSection', '').lower()
+            
+            # Apply different search logic based on filter type
+            match_found = False
+            
+            if filter_type == 'name':
+                # Search only in student name
+                if query in student_name:
+                    match_found = True
+            elif filter_type == 'roll':
+                # Search only in roll number
+                if query in roll_no:
+                    match_found = True
+            elif filter_type == 'class':
+                # Search only in class section
+                if query in class_section:
+                    match_found = True
+            else:
+                # Search in all fields (default)
+                if (query in roll_no or 
+                    query in student_name or 
+                    query in class_section):
+                    match_found = True
+            
+            if match_found and doc.id not in seen_ids:
+                # Only include necessary fields
                 students.append({
                     'id': doc.id,
-                    **student_data
+                    'studentName': student_data.get('studentName', ''),
+                    'rollNo': student_data.get('rollNo', ''),
+                    'classSection': student_data.get('classSection', '')
                 })
                 seen_ids.add(doc.id)
         
-        for doc in name_query:
-            student_data = doc.to_dict()
-            if doc.id not in seen_ids:
-                students.append({
-                    'id': doc.id,
-                    **student_data
-                })
-                seen_ids.add(doc.id)
+        # Limit to 20 results
+        students = students[:20]
         
         return jsonify({'students': students}), 200
     except Exception as e:
         print(f"Error in search_students: {str(e)}")
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/advanced_search', methods=['POST'])
+def advanced_search():
+    try:
+        criteria = request.json
+        
+        # Search in Firestore
+        students_ref = db.collection('students')
+        
+        # Get all students
+        all_students = students_ref.get()
+        
+        # Filter students based on advanced criteria
+        students = []
+        seen_ids = set()
+        
+        for doc in all_students:
+            student_data = doc.to_dict()
+            
+            # Check if student matches all provided criteria
+            match = True
+            
+            # Name criteria
+            if criteria.get('name') and criteria['name'].strip():
+                if criteria['name'].lower() not in student_data.get('studentName', '').lower():
+                    match = False
+            
+            # Roll number criteria
+            if criteria.get('rollNo') and criteria['rollNo'].strip():
+                if criteria['rollNo'].lower() not in student_data.get('rollNo', '').lower():
+                    match = False
+            
+            # Class section criteria
+            if criteria.get('classSection') and criteria['classSection'].strip():
+                if criteria['classSection'].lower() not in student_data.get('classSection', '').lower():
+                    match = False
+            
+            # Gender criteria
+            if criteria.get('gender') and criteria['gender'].strip():
+                if criteria['gender'] != student_data.get('gender', ''):
+                    match = False
+            
+            # Blood group criteria
+            if criteria.get('bloodGroup') and criteria['bloodGroup'].strip():
+                if criteria['bloodGroup'] != student_data.get('bloodGroup', ''):
+                    match = False
+            
+            # Category criteria
+            if criteria.get('category') and criteria['category'].strip():
+                if criteria['category'].lower() not in student_data.get('category', '').lower():
+                    match = False
+            
+            # Address criteria
+            if criteria.get('address') and criteria['address'].strip():
+                if criteria['address'].lower() not in student_data.get('address', '').lower():
+                    match = False
+            
+            if match and doc.id not in seen_ids:
+                # Only include necessary fields
+                students.append({
+                    'id': doc.id,
+                    'studentName': student_data.get('studentName', ''),
+                    'rollNo': student_data.get('rollNo', ''),
+                    'classSection': student_data.get('classSection', '')
+                })
+                seen_ids.add(doc.id)
+        
+        # Limit to 30 results
+        students = students[:30]
+        
+        return jsonify({'students': students}), 200
+    except Exception as e:
+        print(f"Error in advanced_search: {str(e)}")
         return jsonify({'error': str(e)}), 500
 
 @app.route('/get_student_details/<student_id>')
@@ -276,12 +373,11 @@ def edit_student(student_id):
                 return jsonify({'error': 'Student not found'}), 404
                 
             student_data = student_doc.to_dict()
-            return render_template('student_form.html', student=student_data, is_edit=True)
+            return render_template('student_update.html', student=student_data)
             
         else:  # POST request
             # Get form data
             student_data = {
-                'slNo': request.form.get('slNo'),
                 'regNo': request.form.get('regNo'),
                 'rollNo': request.form.get('rollNo'),
                 'classSection': request.form.get('classSection'),
@@ -313,21 +409,22 @@ def edit_student(student_id):
                 'abcId': request.form.get('abcId'),
                 'mailId': request.form.get('mailId')
             }
-
+            
             # Remove None and empty string values
             student_data = {k: v for k, v in student_data.items() if v is not None and v != ''}
-
+            
             # Update student document in Firestore
             db.collection('students').document(student_id).update(student_data)
             
             return jsonify({
+                'success': True,
                 'message': 'Student data updated successfully!',
                 'studentId': student_id
             }), 200
-
+            
     except Exception as e:
         print(f"Error in edit_student: {str(e)}")
-        return jsonify({'error': str(e)}), 500
+        return jsonify({'success': False, 'error': str(e)}), 500
 
 @app.route('/delete_student/<student_id>', methods=['DELETE'])
 def delete_student(student_id):

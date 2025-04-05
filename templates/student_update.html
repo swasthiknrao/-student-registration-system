@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Student Registration - Dr. B. B. Hegde First Grade College</title>
+    <title>Edit Student - Dr. B. B. Hegde First Grade College</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
@@ -67,27 +67,6 @@
             text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
             font-size: 1.1rem;
             margin-top: 0.5rem;
-        }
-
-        .scanner-section {
-            background: white;
-            padding: 2rem;
-            border-radius: var(--border-radius);
-            box-shadow: 0 8px 20px rgba(0,0,0,0.05);
-            margin-bottom: 2rem;
-            border: 1px solid rgba(149, 165, 166, 0.2);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .scanner-section::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 4px;
-            background: linear-gradient(90deg, #4a4a4a, #808080);
         }
 
         .form-container {
@@ -193,6 +172,12 @@
             box-shadow: 0 8px 25px rgba(0,0,0,0.15);
             z-index: 1000;
             animation: slideIn 0.3s ease;
+            font-weight: 600;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: opacity 0.3s ease;
         }
 
         .notification.success {
@@ -236,6 +221,7 @@
             border-radius: var(--border-radius);
             overflow: hidden;
             border: none;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
         }
 
         .modal-header {
@@ -245,8 +231,51 @@
             border: none;
         }
 
+        .modal-header .btn-close {
+            color: white;
+            opacity: 0.8;
+        }
+
         .modal-body {
             padding: 2rem;
+        }
+
+        .modal-footer {
+            padding: 1.5rem;
+            border-top: 1px solid #eee;
+        }
+
+        .modal-footer .btn {
+            padding: 0.75rem 2rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .modal-footer .btn-primary {
+            background: linear-gradient(135deg, var(--success-color), #2ecc71);
+            border: none;
+        }
+
+        .modal-footer .btn-secondary {
+            background: linear-gradient(135deg, #4a4a4a, #666666);
+            border: none;
+        }
+
+        #missingFieldsList {
+            max-height: 200px;
+            overflow-y: auto;
+            border: 1px solid #eee;
+            border-radius: var(--border-radius);
+            margin-top: 1rem;
+        }
+
+        #missingFieldsList .list-group-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 0.75rem 1rem;
         }
 
         /* Input group styling */
@@ -539,40 +568,24 @@
     <div class="container">
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h2 class="mb-0">
-                <i class="fas fa-user-plus"></i> New Student Registration
+                <i class="fas fa-user-edit"></i> Edit Student Details
             </h2>
             <div>
+                <a href="/" class="btn btn-success me-2">
+                    <i class="fas fa-user-plus"></i> Add New Student
+                </a>
                 <a href="/manage" class="btn btn-primary">
                     <i class="fas fa-users"></i> View All Students
                 </a>
             </div>
         </div>
 
-        <div class="scanner-section">
-            <div class="row justify-content-center">
-                <div class="col-md-8">
-                    <div class="scanner-input">
-                        <div class="input-group">
-                            <input type="text" class="form-control barcode-input" id="barcode" name="barcode" 
-                                   placeholder="Scan Student ID Barcode">
-                            <button class="btn btn-primary scan-button" type="button">
-                                <i class="fas fa-barcode"></i> Scan ID
-                            </button>
-                        </div>
-                        <div class="text-center mt-2 text-muted">
-                            <small><i class="fas fa-info-circle"></i> Scan barcode to check if student exists</small>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
         <div class="form-container">
             <div class="text-center mb-4">
-                <p class="text-muted">Fill in the student details below</p>
+                <p class="text-muted">Update the student details below</p>
             </div>
 
-            <form action="/submit" method="POST" id="studentForm">
+            <form action="/edit_student/{{ student.rollNo }}" method="POST" id="studentForm">
                 <div class="section-header">
                     <i class="fas fa-id-card"></i> Basic Information
                 </div>
@@ -581,11 +594,11 @@
                         <label for="regNo" class="form-label">
                             <i class="fas fa-registered"></i> Reg. No.
                         </label>
-                        <input type="text" class="form-control" id="regNo" name="regNo">
+                        <input type="text" class="form-control" id="regNo" name="regNo" value="{{ student.regNo }}">
                     </div>
                     <div class="col-md-6 mb-3">
                         <label for="rollNo" class="form-label">Roll No.</label>
-                        <input type="text" class="form-control" id="rollNo" name="rollNo">
+                        <input type="text" class="form-control" id="rollNo" name="rollNo" value="{{ student.rollNo }}" readonly>
                     </div>
                 </div>
 
@@ -597,28 +610,28 @@
                         <label for="studentName" class="form-label">
                             <i class="fas fa-user"></i> Student Name
                         </label>
-                        <input type="text" class="form-control" id="studentName" name="studentName">
+                        <input type="text" class="form-control" id="studentName" name="studentName" value="{{ student.studentName }}">
                     </div>
                     <div class="col-md-6 mb-3">
                         <label for="fatherName" class="form-label">
                             <i class="fas fa-user-tie"></i> Father Name
                         </label>
-                        <input type="text" class="form-control" id="fatherName" name="fatherName">
+                        <input type="text" class="form-control" id="fatherName" name="fatherName" value="{{ student.fatherName }}">
                     </div>
                 </div>
 
                 <div class="row">
                     <div class="col-md-6 mb-3">
                         <label for="classSection" class="form-label">Class/Section</label>
-                        <input type="text" class="form-control" id="classSection" name="classSection">
+                        <input type="text" class="form-control" id="classSection" name="classSection" value="{{ student.classSection }}">
                     </div>
                     <div class="col-md-6 mb-3">
                         <label for="gender" class="form-label">Gender</label>
                         <select class="form-select" id="gender" name="gender">
                             <option value="">Select Gender</option>
-                            <option value="Male">Male</option>
-                            <option value="Female">Female</option>
-                            <option value="Other">Other</option>
+                            <option value="Male" {% if student.gender == 'Male' %}selected{% endif %}>Male</option>
+                            <option value="Female" {% if student.gender == 'Female' %}selected{% endif %}>Female</option>
+                            <option value="Other" {% if student.gender == 'Other' %}selected{% endif %}>Other</option>
                         </select>
                     </div>
                 </div>
@@ -628,28 +641,29 @@
                         <label for="dob" class="form-label">Date of Birth</label>
                         <input type="text" class="form-control" id="dob" name="dob"
                                pattern="\d{2}-\d{2}-\d{4}" maxlength="10" placeholder="DD-MM-YYYY"
+                               value="{{ student.dob }}"
                                title="Please enter date in DD-MM-YYYY format"
                                oninput="formatDate(this)">
                     </div>
                     <div class="col-md-6 mb-3">
                         <label for="email" class="form-label">Email</label>
-                        <input type="email" class="form-control" id="email" name="email">
+                        <input type="email" class="form-control" id="email" name="email" value="{{ student.email }}">
                     </div>
                 </div>
 
                 <div class="mb-3">
                     <label for="address" class="form-label">Address</label>
-                    <textarea class="form-control" id="address" name="address" rows="3"></textarea>
+                    <textarea class="form-control" id="address" name="address" rows="3">{{ student.address }}</textarea>
                 </div>
 
                 <div class="row">
                     <div class="col-md-6 mb-3">
                         <label for="studentContact" class="form-label">Student Contact No.</label>
-                        <input type="tel" class="form-control" id="studentContact" name="studentContact">
+                        <input type="tel" class="form-control" id="studentContact" name="studentContact" value="{{ student.studentContact }}">
                     </div>
                     <div class="col-md-6 mb-3">
                         <label for="parentNo" class="form-label">Parent No.</label>
-                        <input type="tel" class="form-control" id="parentNo" name="parentNo">
+                        <input type="tel" class="form-control" id="parentNo" name="parentNo" value="{{ student.parentNo }}">
                     </div>
                 </div>
 
@@ -657,6 +671,7 @@
                     <label for="aadharNo" class="form-label">Student Aadhar No.</label>
                     <input type="text" class="form-control" id="aadharNo" name="aadharNo"
                            pattern="\d{10}" maxlength="10" placeholder="10-digit Aadhar number"
+                           value="{{ student.aadharNo }}"
                            title="Please enter a 10-digit Aadhar number"
                            oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 10)">
                 </div>
@@ -667,100 +682,100 @@
                         <select class="form-select" id="bloodGroup" name="bloodGroup">
                             <option value="">Select Blood Group</option>
                             {% for group in ['A+', 'A-', 'B+', 'B-', 'O+', 'O-', 'AB+', 'AB-'] %}
-                            <option value="{{ group }}">{{ group }}</option>
+                            <option value="{{ group }}" {% if student.bloodGroup == group %}selected{% endif %}>{{ group }}</option>
                             {% endfor %}
                         </select>
                     </div>
                     <div class="col-md-4 mb-3">
                         <label for="state" class="form-label">State</label>
-                        <input type="text" class="form-control" id="state" name="state">
+                        <input type="text" class="form-control" id="state" name="state" value="{{ student.state }}">
                     </div>
                     <div class="col-md-4 mb-3">
                         <label for="district" class="form-label">District</label>
-                        <input type="text" class="form-control" id="district" name="district">
+                        <input type="text" class="form-control" id="district" name="district" value="{{ student.district }}">
                     </div>
                 </div>
 
                 <div class="row">
                     <div class="col-md-4 mb-3">
                         <label for="religion" class="form-label">Religion</label>
-                        <input type="text" class="form-control" id="religion" name="religion">
+                        <input type="text" class="form-control" id="religion" name="religion" value="{{ student.religion }}">
                     </div>
                     <div class="col-md-4 mb-3">
                         <label for="category" class="form-label">Category</label>
-                        <input type="text" class="form-control" id="category" name="category">
+                        <input type="text" class="form-control" id="category" name="category" value="{{ student.category }}">
                     </div>
                     <div class="col-md-4 mb-3">
                         <label for="caste" class="form-label">Caste</label>
-                        <input type="text" class="form-control" id="caste" name="caste">
+                        <input type="text" class="form-control" id="caste" name="caste" value="{{ student.caste }}">
                     </div>
                 </div>
 
                 <div class="mb-3">
                     <label for="income" class="form-label">Income</label>
-                    <input type="number" class="form-control" id="income" name="income">
+                    <input type="number" class="form-control" id="income" name="income" value="{{ student.income }}">
                 </div>
 
                 <div class="row">
                     <div class="col-md-6 mb-3">
                         <label for="pucRollNo" class="form-label">PUC/Equivalent Roll No</label>
-                        <input type="text" class="form-control" id="pucRollNo" name="pucRollNo">
+                        <input type="text" class="form-control" id="pucRollNo" name="pucRollNo" value="{{ student.pucRollNo }}">
                     </div>
                     <div class="col-md-6 mb-3">
                         <label for="pucYear" class="form-label">PUC/Equivalent Year of Completion</label>
-                        <input type="text" class="form-control" id="pucYear" name="pucYear">
+                        <input type="text" class="form-control" id="pucYear" name="pucYear" value="{{ student.pucYear }}">
                     </div>
                 </div>
 
                 <div class="mb-3">
                     <label for="pucInstitute" class="form-label">PUC/Equivalent Institute Name</label>
-                    <input type="text" class="form-control" id="pucInstitute" name="pucInstitute">
+                    <input type="text" class="form-control" id="pucInstitute" name="pucInstitute" value="{{ student.pucInstitute }}">
                 </div>
 
                 <div class="row">
                     <div class="col-md-4 mb-3">
                         <label for="pucTotalMarks" class="form-label">PUC/Equivalent Total Marks</label>
-                        <input type="number" class="form-control" id="pucTotalMarks" name="pucTotalMarks">
+                        <input type="number" class="form-control" id="pucTotalMarks" name="pucTotalMarks" value="{{ student.pucTotalMarks }}">
                     </div>
                     <div class="col-md-4 mb-3">
                         <label for="pucObtainedMarks" class="form-label">PUC/Equivalent Obtained Marks</label>
-                        <input type="number" class="form-control" id="pucObtainedMarks" name="pucObtainedMarks">
+                        <input type="number" class="form-control" id="pucObtainedMarks" name="pucObtainedMarks" value="{{ student.pucObtainedMarks }}">
                     </div>
                     <div class="col-md-4 mb-3">
                         <label for="pucPercentage" class="form-label">PUC/Equivalent Percentage/CGPA</label>
-                        <input type="number" step="0.01" class="form-control" id="pucPercentage" name="pucPercentage">
+                        <input type="number" step="0.01" class="form-control" id="pucPercentage" name="pucPercentage" value="{{ student.pucPercentage }}">
                     </div>
                 </div>
 
                 <div class="row">
                     <div class="col-md-6 mb-3">
                         <label for="discipline1" class="form-label">Discipline 1</label>
-                        <input type="text" class="form-control" id="discipline1" name="discipline1">
+                        <input type="text" class="form-control" id="discipline1" name="discipline1" value="{{ student.discipline1 }}">
                     </div>
                     <div class="col-md-6 mb-3">
                         <label for="lang2" class="form-label">Lang 2</label>
-                        <input type="text" class="form-control" id="lang2" name="lang2">
+                        <input type="text" class="form-control" id="lang2" name="lang2" value="{{ student.lang2 }}">
                     </div>
                 </div>
 
                 <div class="row">
                     <div class="col-md-4 mb-3">
                         <label for="yearOfAdmission" class="form-label">Year of Admission</label>
-                        <input type="text" class="form-control" id="yearOfAdmission" name="yearOfAdmission">
+                        <input type="text" class="form-control" id="yearOfAdmission" name="yearOfAdmission" value="{{ student.yearOfAdmission }}">
                     </div>
                     <div class="col-md-4 mb-3">
                         <label for="abcId" class="form-label">ABC ID</label>
-                        <input type="text" class="form-control" id="abcId" name="abcId">
+                        <input type="text" class="form-control" id="abcId" name="abcId" value="{{ student.abcId }}">
                     </div>
                     <div class="col-md-4 mb-3">
                         <label for="mailId" class="form-label">Mail ID provided by College</label>
-                        <input type="email" class="form-control" id="mailId" name="mailId">
+                        <input type="email" class="form-control" id="mailId" name="mailId" value="{{ student.mailId }}">
                     </div>
                 </div>
 
                 <div class="submit-container">
                     <button type="submit" class="btn btn-submit">
-                        <i class="fas fa-save me-2"></i> Submit Registration
+                        <i class="fas fa-save me-2"></i> Update Student Details
                     </button>
                 </div>
             </form>
@@ -793,13 +808,13 @@
             <div class="modal-content">
                 <div class="modal-header bg-success">
                     <h5 class="modal-title" id="confirmationModalLabel">
-                        <i class="fas fa-check-circle"></i> Registration Confirmation
+                        <i class="fas fa-check-circle"></i> Update Confirmation
                     </h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <div class="confirmation-icon text-center mb-4">
-                        <i class="fas fa-user-plus fa-4x text-success"></i>
+                        <i class="fas fa-user-edit fa-4x text-success"></i>
                     </div>
                     <div id="confirmationMessage" class="text-center mb-3"></div>
                     <div id="missingFieldsContainer" class="mt-3" style="display: none;">
@@ -811,7 +826,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                    <button type="button" class="btn btn-primary" id="proceedButton">Register Student</button>
+                    <button type="button" class="btn btn-primary" id="proceedButton">Update Student</button>
                 </div>
             </div>
         </div>
@@ -831,11 +846,18 @@
         function showNotification(message, type = 'info') {
             const notification = document.createElement('div');
             notification.className = `notification ${type}`;
-            notification.textContent = message;
+            notification.innerHTML = `<i class="fas fa-${type === 'success' ? 'check-circle' : 'info-circle'}"></i> ${message}`;
             document.body.appendChild(notification);
             
+            // Make sure it's visible
+            notification.style.display = 'block';
+            notification.style.opacity = '1';
+            
             setTimeout(() => {
-                notification.remove();
+                notification.style.opacity = '0';
+                setTimeout(() => {
+                    notification.remove();
+                }, 300);
             }, 3000);
         }
 
@@ -844,8 +866,8 @@
             errorBox.className = 'error-box';
             errorBox.textContent = message;
             
-            const barcodeInput = document.getElementById('barcode');
-            barcodeInput.parentNode.insertBefore(errorBox, barcodeInput.nextSibling);
+            const formContainer = document.querySelector('.form-container');
+            formContainer.insertBefore(errorBox, formContainer.firstChild);
             
             errorBox.style.display = 'block';
             
@@ -855,75 +877,9 @@
             }, 3000);
         }
 
-        function clearForm() {
-            document.getElementById('studentForm').reset();
-            document.getElementById('barcode').value = '';
-        }
-
-        // Simplified barcode handling
-        function handleBarcodeInput(event) {
-            const barcode = event.target.value.trim();
-            
-            if (barcode) {
-                // Set the roll number immediately
-                document.getElementById('rollNo').value = barcode;
-                
-                // Check if student exists
-                fetch('/search_barcode', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ barcode: barcode })
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.error) {
-                        showNotification('New student registration started. Please fill in the details.', 'info');
-                        return;
-                    }
-                    
-                    showWarning('This student is already registered in the system!');
-                    clearForm();
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    showError('Error checking student status');
-                    clearForm();
-                });
-            }
-        }
-
-        // Handle scan button click
-        document.querySelector('.scan-button').addEventListener('click', function() {
-            const barcodeInput = document.getElementById('barcode');
-            handleBarcodeInput({ target: barcodeInput });
-        });
-
-        // Handle Enter key in barcode field
-        document.getElementById('barcode').addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                e.preventDefault();
-                handleBarcodeInput({ target: this });
-            }
-        });
-
-        // Handle input changes in barcode field
-        document.getElementById('barcode').addEventListener('input', handleBarcodeInput);
-
         // Required fields list
         const requiredFields = [
-            { id: 'rollNo', label: 'Roll No.' },
-            { id: 'studentName', label: 'Student Name' },
-            { id: 'fatherName', label: 'Father Name' },
-            { id: 'classSection', label: 'Class/Section' },
-            { id: 'gender', label: 'Gender' },
-            { id: 'dob', label: 'Date of Birth' },
-            { id: 'email', label: 'Email' },
-            { id: 'address', label: 'Address' },
-            { id: 'studentContact', label: 'Student Contact No.' },
-            { id: 'parentNo', label: 'Parent No.' },
-            { id: 'aadharNo', label: 'Aadhar No.' }
+            { id: 'rollNo', label: 'Roll No.' }
         ];
 
         function checkRequiredFields() {
@@ -933,6 +889,9 @@
                 const element = document.getElementById(field.id);
                 if (!element.value.trim()) {
                     missingFields.push(field.label);
+                    element.classList.add('is-invalid');
+                } else {
+                    element.classList.remove('is-invalid');
                 }
             });
             
@@ -978,12 +937,31 @@
                 document.getElementById('proceedButton').style.display = 'block';
             } else {
                 missingFieldsContainer.style.display = 'none';
-                document.getElementById('proceedButton').innerHTML = '<i class="fas fa-check-circle"></i> Register Student';
+                document.getElementById('proceedButton').innerHTML = '<i class="fas fa-check-circle"></i> Update Student';
                 document.getElementById('proceedButton').style.display = 'block';
             }
             
             confirmationModal.show();
         }
+
+        // Handle form submission
+        document.getElementById('studentForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Check for missing required fields
+            const missingFields = checkRequiredFields();
+            
+            if (missingFields.length > 0) {
+                showError('Roll number is required');
+                return;
+            }
+            
+            // Show confirmation with all empty fields
+            showConfirmation(
+                'Are you sure you want to update this student? The following fields are empty:', 
+                missingFields
+            );
+        });
 
         // Handle proceed button click
         document.getElementById('proceedButton').addEventListener('click', function() {
@@ -992,7 +970,7 @@
             // Show loading indicator with animation
             const loadingIndicator = document.createElement('div');
             loadingIndicator.className = 'loading-indicator';
-            loadingIndicator.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Registering student...';
+            loadingIndicator.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Updating student data...';
             document.body.appendChild(loadingIndicator);
             
             // Submit the form using fetch to handle the response
@@ -1014,7 +992,7 @@
                 loadingIndicator.remove();
                 
                 if (data.message) {
-                    // Show success animation
+                    // Show success animation before redirecting
                     const successAnimation = document.createElement('div');
                     successAnimation.className = 'success-animation';
                     successAnimation.innerHTML = `
@@ -1030,12 +1008,10 @@
                     `;
                     document.body.appendChild(successAnimation);
                     
-                    // Remove success animation after 2 seconds
+                    // Redirect immediately after a very short delay
                     setTimeout(() => {
-                        successAnimation.remove();
-                        // Clear the form after successful registration
-                        clearForm();
-                    }, 2000);
+                        window.location.href = '/manage';
+                    }, 800);
                 } else if (data.error) {
                     showError(data.error);
                 }
@@ -1045,52 +1021,7 @@
                 loadingIndicator.remove();
                 
                 console.error('Error:', error);
-                showError('An error occurred while registering the student.');
-            });
-        });
-
-        let formDataToSubmit = null;
-
-        document.getElementById('studentForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            const formData = new FormData(this);
-            const rollNo = formData.get('rollNo');
-            
-            if (!rollNo) {
-                showError('Roll number is required');
-                return;
-            }
-            
-            // Check for duplicates
-            fetch('/check_duplicate', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    rollNo: rollNo,
-                    regNo: formData.get('regNo')
-                })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.isDuplicate) {
-                    showWarning(data.message);
-                    clearForm();
-                    return;
-                }
-                
-                // Show confirmation with all empty fields
-                showConfirmation(
-                    'Are you sure you want to register this student?', 
-                    []
-                );
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                showError('Error checking for duplicate student');
-                clearForm();
+                showError('An error occurred while updating the student.');
             });
         });
 

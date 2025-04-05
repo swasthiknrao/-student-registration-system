@@ -1,29 +1,35 @@
 /* Modern Balanced Theme Colors */
 :root {
-    --primary-color: #78909c;
-    --secondary-color: #90a4ae;
-    --accent-color: #b0bec5;
-    --text-light: #ffffff;
-    --text-dark: #546e7a;
-    --bg-light: #f5f7f9;
-    --bg-dark: #78909c;
+    --primary-color: #4a4a4a;
+    --secondary-color: #808080;
+    --accent-color: #ff6b6b;
+    --success-color: #20c997;
+    --light-bg: #f5f5f5;
+    --dark-bg: #333333;
+    --text-primary: #333333;
+    --text-secondary: #666666;
+    --border-radius: 10px;
+    --gradient-start: #4a4a4a;
+    --gradient-mid: #666666;
+    --gradient-end: #808080;
 }
 
 body {
-    background: #f5f7f9;
+    background: linear-gradient(135deg, #f5f5f5 0%, #e0e0e0 100%);
+    min-height: 100vh;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     color: #546e7a;
 }
 
 /* College Header Styling */
 .college-header {
-    background: #78909c;
-    color: #ffffff;
-    padding: 50px 0;
-    margin-bottom: 50px;
+    background: linear-gradient(135deg, var(--gradient-start), var(--gradient-mid), var(--gradient-end));
+    color: white;
+    padding: 2rem 0;
+    margin-bottom: 2rem;
     position: relative;
     overflow: hidden;
-    box-shadow: 0 4px 20px rgba(120, 144, 156, 0.2);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.15);
 }
 
 .college-logo {
@@ -31,11 +37,11 @@ body {
     height: 160px;
     object-fit: contain;
     margin-right: 40px;
-    border: 4px solid #b0bec5;
-    border-radius: 20px;
-    padding: 20px;
-    background: #ffffff;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+    border: none;
+    border-radius: 0;
+    padding: 0;
+    background: none;
+    box-shadow: none;
 }
 
 .college-logo img {
@@ -46,7 +52,7 @@ body {
     font-size: 3.2rem;
     font-weight: 700;
     margin-bottom: 20px;
-    color: #ffffff;
+    color: white;
     letter-spacing: -0.5px;
     line-height: 1.2;
 }
@@ -82,10 +88,9 @@ body {
     position: absolute;
     top: 0;
     left: 0;
-    width: 100%;
-    height: 6px;
-    background: #95a5a6;
-    border-radius: 16px 16px 0 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--gradient-start), var(--gradient-end));
 }
 
 .scanner-input {
@@ -122,28 +127,27 @@ body {
 }
 
 .barcode-input:focus {
-    border-color: #95a5a6;
-    box-shadow: 0 0 0 4px rgba(149, 165, 166, 0.1);
-    background: #ffffff;
+    border-color: var(--secondary-color);
+    box-shadow: 0 0 0 0.2rem rgba(128, 128, 128, 0.25);
+    background: white;
 }
 
 .scan-button {
-    background: #2c3e50;
+    background: linear-gradient(135deg, var(--gradient-start), var(--gradient-mid));
     border: none;
     height: 70px;
     padding: 0 40px;
     border-radius: 12px;
     font-size: 1.3rem;
     font-weight: 600;
-    color: #ffffff;
+    color: white;
     letter-spacing: 1px;
     transition: all 0.3s ease;
 }
 
 .scan-button:hover {
-    background: #34495e;
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(44, 62, 80, 0.2);
+    box-shadow: 0 8px 25px rgba(74, 74, 74, 0.3);
 }
 
 .scan-button i {
@@ -159,27 +163,27 @@ body {
 
 /* Form Container */
 .form-container {
-    background: #ffffff;
-    border-radius: 12px;
-    padding: 40px;
+    background: white;
+    border-radius: var(--border-radius);
+    padding: 2.5rem;
     position: relative;
-    box-shadow: 0 4px 20px rgba(120, 144, 156, 0.1);
-    border: 1px solid #eceff1;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+    border: 1px solid rgba(128, 128, 128, 0.2);
 }
 
 .section-header {
-    background: #f5f7f9;
-    padding: 20px 30px;
-    margin: 30px -20px;
-    border-left: 4px solid #b0bec5;
-    font-size: 1.4rem;
-    color: #546e7a;
+    background: linear-gradient(135deg, var(--gradient-start), var(--gradient-mid));
+    padding: 1rem 1.5rem;
+    border-radius: var(--border-radius);
+    margin: 1.5rem 0;
+    color: white;
     font-weight: 600;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
 }
 
 .section-header i {
     margin-right: 15px;
-    color: #90a4ae;
+    color: #666666;
     font-size: 1.4rem;
 }
 
@@ -198,9 +202,9 @@ body {
 }
 
 .form-control:focus, .form-select:focus {
-    border-color: #90a4ae;
-    box-shadow: 0 0 0 3px rgba(144, 164, 174, 0.1);
-    background: #ffffff;
+    border-color: var(--secondary-color);
+    box-shadow: 0 0 0 0.2rem rgba(128, 128, 128, 0.25);
+    background-color: white;
 }
 
 .form-label {
@@ -220,20 +224,19 @@ textarea.form-control {
 
 /* Submit Button */
 .btn-submit {
-    background: #78909c;
+    background: linear-gradient(135deg, var(--gradient-start), var(--gradient-mid));
     border: none;
     padding: 15px 40px;
     border-radius: 8px;
     font-size: 1.2rem;
     font-weight: 600;
-    color: #ffffff;
+    color: white;
     position: relative;
 }
 
 .btn-submit:hover {
-    background: #90a4ae;
-    transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(120, 144, 156, 0.2);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(74, 74, 74, 0.3);
 }
 
 /* Success Animation */
@@ -274,7 +277,8 @@ textarea.form-control {
 }
 
 .notification.info {
-    background: #78909c;
+    background: linear-gradient(135deg, var(--gradient-start), var(--gradient-mid));
+    color: white;
 }
 
 .notification.warning {
