@@ -4,6 +4,7 @@ __pycache__/
 *$py.class
 *.so
 .Python
+env/
 build/
 develop-eggs/
 dist/
@@ -15,15 +16,15 @@ lib64/
 parts/
 sdist/
 var/
-wheels/
 *.egg-info/
 .installed.cfg
 *.egg
 
-# Virtual Environment
-venv/
-env/
-ENV/
+# Environment variables
+.env
+
+# Firebase
+serviceAccountKey.json
 
 # IDE
 .idea/
@@ -31,44 +32,6 @@ ENV/
 *.swp
 *.swo
 
-# Environment Variables
-.env
-.env.*
-
-# Firebase
-serviceAccountKey.json
-*serviceAccountKey*.json
-
-# Flask
-instance/
-.webassets-cache
-
-# Logs
-*.log
-logs/
-
-# System Files
+# OS
 .DS_Store
-Thumbs.db
-
-# Database
-*.db
-*.sqlite3
-
-# Distribution / packaging
-.Python
-build/
-develop-eggs/
-dist/
-downloads/
-eggs/
-.eggs/
-lib/
-lib64/
-parts/
-sdist/
-var/
-wheels/
-*.egg-info/
-.installed.cfg
-*.egg 
+Thumbs.db 
