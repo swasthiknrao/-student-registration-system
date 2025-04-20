@@ -1,4 +1,4 @@
-Node.js# Student Management System - Dr. B. B. Hegde First Grade College
+# Student Management System - Dr. B. B. Hegde First Grade College
 
 A modern, feature-rich web application for managing student records, built with Flask and Firebase. The system provides comprehensive student management capabilities including registration, search, and profile management with an attractive and user-friendly interface.
 
